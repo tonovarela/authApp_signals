@@ -22,6 +22,11 @@ export class AppComponent {
 
 
 
+
+  public logout() {
+    this.authService.logout();
+  }
+
   public authStatusChangedEffect = effect(() => {
     switch (this.authService.authStatus()) {
       case AuthStatus.checking:

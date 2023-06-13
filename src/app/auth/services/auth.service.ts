@@ -38,17 +38,24 @@ export class AuthService {
     const url = `${this.baseURL}/auth/check-token`;
     const token = localStorage.getItem('token');
     if (!token) {
-      this._authStatus.set(AuthStatus.notAuthenticated);
+      this.logout();      
       return of(false);
     }
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get<CheckTokenResponse>(url, { headers }).pipe(
         map(({ token, user }) => this.setAuthentication(user, token)),
         catchError(() => {
-          this._authStatus.set(AuthStatus.notAuthenticated);
+          this.logout();
           return of(false);
         }),
       );
+  }
+
+
+  logout(){
+    this._authStatus.set(AuthStatus.notAuthenticated);
+    this._currentUser.set(null);
+    localStorage.removeItem('token');
   }
 
 
